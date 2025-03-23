@@ -1,24 +1,25 @@
-export type UserData = {
-  username: string;
-  stars: number;
-};
+import { toast } from "sonner";
+import type { Data } from "./types";
+import { createData, createDataWithError } from "./util";
 
-// TODO: merge getAllUserStars and userExists into one function
-export async function getAllUserStars(username: string): Promise<number> {
+export async function getAllUserStars(username: string): Promise<Data<number>> {
   try {
     const response = await fetch(
       `https://api.github-star-counter.workers.dev/user/${username}`
     );
 
     if (!response.ok) {
-      throw new Error(`GitHub API error: ${response.status}`);
+      toast.error(`Error getting stars for ${username}`);
+      console.error(`GitHub API error: ${response.status}`);
+      return createDataWithError(-1, `GitHub API error: ${response.status}`);
     }
 
     const data = await response.json();
-    return data.stars;
+    return createData(data.stars);
   } catch (error) {
-    console.error("Error fetching GitHub stars:", error);
-    throw error;
+    toast.error(`Error while getting stars for ${username}`);
+    console.error("Error while fetching GitHub stars:", error);
+    return createDataWithError(-1, `Error while getting stars for ${username}`);
   }
 }
 

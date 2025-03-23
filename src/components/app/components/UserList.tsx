@@ -9,14 +9,16 @@ import {
   TextField,
   Text,
   Grid,
+  HoverCard,
 } from "@radix-ui/themes";
 import {
   getAllUserStars,
   simplifyText,
   userExists,
+  type Data,
   type UserData,
 } from "@/lib";
-import { Search, Star, Trash2 } from "lucide-react";
+import { CircleAlert, Search, Star, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -94,18 +96,14 @@ interface UserProps {
 
 function User({ username, onRemove }: UserProps) {
   const [isLoading, setLoading] = useState(true);
-  const [user, setUser] = useState<UserData>({} as UserData);
+  const [userData, setUserData] = useState<Data<UserData>>();
 
   const getUser = async () => {
     try {
       setLoading(true);
-
-      if (await userExists(username)) {
-        const stars = await getAllUserStars(username);
-        setUser({ username: username, stars: stars } as UserData);
-      } else {
-        toast.error(`User ${username} not found`);
-      }
+      const response = await fetch(`/api/${username}.json`);
+      const json = (await response.json()) as Data<UserData>;
+      setUserData(json);
     } catch (error) {
       console.error(error);
     } finally {
@@ -120,33 +118,44 @@ function User({ username, onRemove }: UserProps) {
   return (
     <div>
       <Flex width="100%" gap="2" align="center" justify="between">
-        <Card>
-          <Flex gap="2" align="center" className="center">
-            <Star />
-            <Skeleton loading={isLoading}>
-              <Heading className="selectable">{user.stars ?? -1}</Heading>
-            </Skeleton>
-          </Flex>
-        </Card>
-        <Card style={{ flex: 1 }}>
-          <Flex width="100%" gap="2" align="center" justify="between">
-            <Flex gap="2" align="center">
-              <Avatar
-                size="2"
-                fallback={isLoading ? ((user.username ?? "?")[0] ?? "?") : "?"}
-                src={`https://avatars.githubusercontent.com/${username}`}
-              />
-              <Link href={`https://github.com/${username}`} target="_blank">
-                <Text size="4" weight="bold" className="selectable">
-                  {username}
-                </Text>
-              </Link>
+        <HoverCard.Root>
+          <HoverCard.Trigger>
+            <Card>
+              <Skeleton loading={userData?.hasError}>
+                <Flex gap="2" align="center" className="center">
+                  <Star />
+                  <Heading className="selectable">
+                    {userData?.data.stars ?? -1}
+                  </Heading>
+                </Flex>
+              </Skeleton>
+            </Card>
+          </HoverCard.Trigger>
+          <Card style={{ flex: 1 }}>
+            <Flex width="100%" gap="2" align="center" justify="between">
+              <Flex gap="2" align="center">
+                <Avatar
+                  size="2"
+                  fallback={(username ?? "?")[0]}
+                  src={`https://avatars.githubusercontent.com/${username}`}
+                />
+                <Link href={`https://github.com/${username}`} target="_blank">
+                  <Text size="4" weight="bold" className="selectable">
+                    {username}
+                  </Text>
+                </Link>
+              </Flex>
+              <IconButton variant="soft" onClick={() => onRemove(username)}>
+                <Trash2 size="18" />
+              </IconButton>
             </Flex>
-            <IconButton variant="soft" onClick={() => onRemove(user.username)}>
-              <Trash2 size="18" />
-            </IconButton>
-          </Flex>
-        </Card>
+          </Card>
+          <HoverCard.Content>
+            <pre style={{ margin: 0 }} className="selectable">
+              {JSON.stringify(userData, null, 2)}
+            </pre>
+          </HoverCard.Content>
+        </HoverCard.Root>
       </Flex>
     </div>
   );
