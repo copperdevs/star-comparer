@@ -2,6 +2,24 @@ import { toast } from "sonner";
 import type { Data } from "./types";
 import { createData, createDataWithError } from "./util";
 
+// export async function getUserData(username: string): Promise<Data<UserData>> {
+//   const exists = await userExists(username);
+
+//   const stars = await getAllUserStars(username);
+
+//   const data: Data<UserData> = {
+//     data: {
+//       exists: exists,
+//       username: username,
+//       stars: exists && !stars.hasError ? stars.data : -1,
+//     },
+//     hasError: stars.hasError,
+//     error: stars.error,
+//   };
+
+//   return data;
+// }
+
 export async function getAllUserStars(username: string): Promise<Data<number>> {
   try {
     const response = await fetch(
@@ -23,17 +41,18 @@ export async function getAllUserStars(username: string): Promise<Data<number>> {
   }
 }
 
-export async function userExists(username: string): Promise<boolean> {
+export async function userExists(username: string): Promise<Data<boolean>> {
   try {
     const response = await fetch(`https://api.github.com/users/${username}`);
 
     if (response.status === 404) {
-      return false;
+      return createDataWithError(false, response.statusText);
     }
 
-    return response.status === 200;
+    return createData(response.status === 200);
   } catch (error) {
-    console.error("Error checking if GitHub user exists:", error);
-    return false;
+    const message = `Error checking if GitHub user exists: ${error}`;
+    console.error(message);
+    return createDataWithError(false, message);
   }
 }

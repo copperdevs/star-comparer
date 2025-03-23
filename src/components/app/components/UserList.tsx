@@ -11,14 +11,8 @@ import {
   Grid,
   HoverCard,
 } from "@radix-ui/themes";
-import {
-  getAllUserStars,
-  simplifyText,
-  userExists,
-  type Data,
-  type UserData,
-} from "@/lib";
-import { CircleAlert, Search, Star, Trash2 } from "lucide-react";
+import { getAllUserStars, userExists, simplifyText, type Data } from "@/lib";
+import { Search, Star, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -49,13 +43,7 @@ export default function UserList({ users, setUsers }: UserListProps) {
         (username) => username.toLowerCase() === usernameValue.toLowerCase()
       )
     ) {
-      toast.error("User already added");
-      return;
-    }
-
-    // user does not exist, don't add them to the list
-    if (!(await userExists(usernameValue))) {
-      toast.error(`User ${usernameValue} not found`);
+      toast.warning("User already added");
       return;
     }
 
@@ -96,14 +84,27 @@ interface UserProps {
 
 function User({ username, onRemove }: UserProps) {
   const [isLoading, setLoading] = useState(true);
-  const [userData, setUserData] = useState<Data<UserData>>();
+  const [exists, setExists] = useState(false);
+  const [stars, setStars] = useState(-1);
 
   const getUser = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/${username}.json`);
-      const json = (await response.json()) as Data<UserData>;
-      setUserData(json);
+
+      const existsData = await userExists(username);
+      setExists(existsData.data);
+
+      if (!existsData.data) {
+        toast.error(`User ${username} does not exist`);
+        onRemove(username);
+      }
+
+      const starsData = await getAllUserStars(username);
+      setStars(starsData.data);
+
+      if (starsData.hasError) {
+        onRemove(username);
+      }
     } catch (error) {
       console.error(error);
     } finally {
@@ -117,20 +118,16 @@ function User({ username, onRemove }: UserProps) {
 
   return (
     <div>
-      <Flex width="100%" gap="2" align="center" justify="between">
-        <HoverCard.Root>
-          <HoverCard.Trigger>
-            <Card>
-              <Skeleton loading={userData?.hasError}>
-                <Flex gap="2" align="center" className="center">
-                  <Star />
-                  <Heading className="selectable">
-                    {userData?.data.stars ?? -1}
-                  </Heading>
-                </Flex>
-              </Skeleton>
-            </Card>
-          </HoverCard.Trigger>
+      {exists && (
+        <Flex width="100%" gap="2" align="center" justify="between">
+          <Card>
+            <Skeleton loading={isLoading}>
+              <Flex gap="2" align="center" className="center">
+                <Star />
+                <Heading className="selectable">{stars ?? -1}</Heading>
+              </Flex>
+            </Skeleton>
+          </Card>
           <Card style={{ flex: 1 }}>
             <Flex width="100%" gap="2" align="center" justify="between">
               <Flex gap="2" align="center">
@@ -150,13 +147,8 @@ function User({ username, onRemove }: UserProps) {
               </IconButton>
             </Flex>
           </Card>
-          <HoverCard.Content>
-            <pre style={{ margin: 0 }} className="selectable">
-              {JSON.stringify(userData, null, 2)}
-            </pre>
-          </HoverCard.Content>
-        </HoverCard.Root>
-      </Flex>
+        </Flex>
+      )}
     </div>
   );
 }
