@@ -1,16 +1,16 @@
 import { type AppInfo, type SiteInfo } from "@/lib";
 
 export const appInfo: AppInfo = {
-  accentColor: "jade",
+  accentColor: "ruby",
   grayColor: "slate",
   appearanceColor: "dark",
 };
 
 export const siteInfo: SiteInfo = {
-  title: "base-astro",
+  title: "star comparer",
   license: "MIT",
-  keywords: ["testing", "astro"],
-  robots: "all",
+  keywords: ["github", "star comparer", "stars"],
+  robots: "none",
   locale: "en_US",
   twitter: {
     card: "summary_large_image",

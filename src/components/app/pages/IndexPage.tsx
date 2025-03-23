@@ -1,30 +1,47 @@
 import { goTo, type PageProps } from "@/lib";
 import { BaseAppLayout } from "@/components/app/layouts/BaseAppLayout";
 import { Box, Button, Grid, Heading, Separator } from "@radix-ui/themes";
-import { Calculator, Github } from "lucide-react";
+import { Github, X } from "lucide-react";
+import UserList from "@app/components/UserList";
+import { useState } from "react";
 
 export default function IndexPage({ props }: { props: PageProps }) {
+  const [users, setUsers] = useState<string[]>([]);
+
   return (
     <BaseAppLayout props={props}>
       <div className="pagecenter scrollable">
         <div className="contentcenter">
           <div className="content">
-            <Heading align="center">Coppers Base Astro </Heading>
-            <Box width="25%" className="center spacer vertical">
-              <Separator size="4" />
-            </Box>
-            <Grid gap="3" width="25%" className="center">
-              <Button
-                variant="soft"
-                onClick={() => goTo("https://github.com/copperdevs/base-astro")}
-              >
-                <Github size="18" /> Source Code
-              </Button>
+            <Heading align="center" className="selectable">
+              Star Comparer
+            </Heading>
+            <Box width="55%" className="center ">
+              <Separator size="4" className="spacer vertical" />
 
-              <Button variant="soft" onClick={() => goTo("/counter")}>
-                <Calculator size="18" /> Counter Example
-              </Button>
-            </Grid>
+              <Grid columns="2" gap="2" className="center">
+                <Button
+                  variant="soft"
+                  onClick={() =>
+                    goTo("https://github.com/copperdevs/star-comparer")
+                  }
+                  className="full width"
+                >
+                  <Github size="18" /> Source Code
+                </Button>
+                <Button
+                  variant="soft"
+                  className="full width"
+                  onClick={() => setUsers([])}
+                >
+                  <X size="18" /> Clear Users
+                </Button>
+              </Grid>
+
+              <Separator size="4" className="spacer vertical" />
+
+              <UserList users={users} setUsers={setUsers} />
+            </Box>
           </div>
         </div>
       </div>

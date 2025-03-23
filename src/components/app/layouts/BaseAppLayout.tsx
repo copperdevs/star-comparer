@@ -1,6 +1,7 @@
 import { type PageProps } from "@/lib";
 import { Theme as RadixTheme } from "@radix-ui/themes";
 import type { ReactNode } from "react";
+import { Toaster } from "sonner";
 
 export function BaseAppLayout({
   props,
@@ -16,6 +17,7 @@ export function BaseAppLayout({
       radius="large"
       appearance={props.appInfo.appearanceColor}
     >
+      <Toaster theme="dark" richColors expand visibleToasts={16} />
       {children}
     </RadixTheme>
   );
