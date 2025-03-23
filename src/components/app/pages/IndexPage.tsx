@@ -1,4 +1,4 @@
-import { goTo, goToNewPage, type PageProps } from "@/lib";
+import { goToNewPage, type PageProps } from "@/lib";
 import { BaseAppLayout } from "@/components/app/layouts/BaseAppLayout";
 import { Box, Button, Grid, Heading, Separator } from "@radix-ui/themes";
 import { Github, X } from "lucide-react";

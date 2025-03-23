@@ -1,26 +1,18 @@
 import { toast } from "sonner";
 import type { Data } from "./types";
 import { createData, createDataWithError } from "./util";
-
-// export async function getUserData(username: string): Promise<Data<UserData>> {
-//   const exists = await userExists(username);
-
-//   const stars = await getAllUserStars(username);
-
-//   const data: Data<UserData> = {
-//     data: {
-//       exists: exists,
-//       username: username,
-//       stars: exists && !stars.hasError ? stars.data : -1,
-//     },
-//     hasError: stars.hasError,
-//     error: stars.error,
-//   };
-
-//   return data;
-// }
+import { getItem, hasItem, setItem } from "./storage";
 
 export async function getAllUserStars(username: string): Promise<Data<number>> {
+  if (hasItem(`${username}-stars`)) {
+    const itemStars = getItem<number>(`${username}-stars`);
+
+    if (itemStars) {
+      // toast.info("Getting stars from cache");
+      return createData(itemStars);
+    }
+  }
+
   try {
     const response = await fetch(
       `https://api.github-star-counter.workers.dev/user/${username}`
@@ -33,6 +25,9 @@ export async function getAllUserStars(username: string): Promise<Data<number>> {
     }
 
     const data = await response.json();
+
+    setItem(`${username}-stars`, data.stars);
+
     return createData(data.stars);
   } catch (error) {
     toast.error(`Error while getting stars for ${username}`);
@@ -42,12 +37,23 @@ export async function getAllUserStars(username: string): Promise<Data<number>> {
 }
 
 export async function userExists(username: string): Promise<Data<boolean>> {
+  if (hasItem(`${username}-exists`)) {
+    const itemExists = getItem<boolean>(`${username}-exists`);
+
+    if (itemExists) {
+      // toast.info("Getting user exists from cache");
+      return createData(itemExists);
+    }
+  }
+
   try {
     const response = await fetch(`https://api.github.com/users/${username}`);
 
     if (response.status === 404) {
       return createDataWithError(false, response.statusText);
     }
+
+    setItem(`${username}-exists`, response.status === 200);
 
     return createData(response.status === 200);
   } catch (error) {
