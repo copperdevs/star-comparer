@@ -119,7 +119,7 @@ function User({ username, onRemove }: UserProps) {
           <Flex gap="2" align="center" className="center">
             <Star />
             <Skeleton loading={isLoading}>
-              <Heading>{user.stars ?? -1}</Heading>
+              <Heading className="selectable">{user.stars ?? -1}</Heading>
             </Skeleton>
           </Flex>
         </Card>
@@ -136,7 +136,7 @@ function User({ username, onRemove }: UserProps) {
                 />
               </Skeleton>
               <Skeleton loading={isLoading}>
-                <Heading>{user.username}</Heading>
+                <Heading className="selectable">{user.username}</Heading>
               </Skeleton>
             </Flex>
             <IconButton variant="soft" onClick={() => onRemove(user.username)}>
