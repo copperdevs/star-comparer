@@ -64,10 +64,6 @@ export default function UserList({ users, setUsers }: UserListProps) {
 
   return (
     <div>
-      {users.map((user) => (
-        <User key={user} username={user} onRemove={removeUser} />
-      ))}
-
       <TextField.Root
         placeholder="Add a user..."
         value={usernameValue}
@@ -78,6 +74,10 @@ export default function UserList({ users, setUsers }: UserListProps) {
           <Search size="18" />
         </TextField.Slot>
       </TextField.Root>
+
+      {users.map((user) => (
+        <User key={user} username={user} onRemove={removeUser} />
+      ))}
     </div>
   );
 }
