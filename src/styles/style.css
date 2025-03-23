@@ -67,8 +67,8 @@ body {
     flex-direction: column;
     justify-content: center;
     height: 100%;
-    min-width: 65%;
-    max-width: 75%;
+    min-width: 45%;
+    max-width: 55%;
   }
 }
 
@@ -79,8 +79,8 @@ body {
     flex-direction: column;
     justify-content: center;
     height: 100%;
-    min-width: 85%;
-    max-width: 95%;
+    min-width: 80%;
+    max-width: 90%;
   }
 }
 

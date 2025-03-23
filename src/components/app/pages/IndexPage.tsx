@@ -16,7 +16,7 @@ export default function IndexPage({ props }: { props: PageProps }) {
             <Heading align="center" className="selectable">
               Star Comparer
             </Heading>
-            <Box width="55%" className="center ">
+            <Box width="95%" className="center ">
               <Separator size="4" className="spacer vertical" />
 
               <Grid columns="2" gap="2" className="center">
