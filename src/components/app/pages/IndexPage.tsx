@@ -1,4 +1,4 @@
-import { goTo, type PageProps } from "@/lib";
+import { goTo, goToNewPage, type PageProps } from "@/lib";
 import { BaseAppLayout } from "@/components/app/layouts/BaseAppLayout";
 import { Box, Button, Grid, Heading, Separator } from "@radix-ui/themes";
 import { Github, X } from "lucide-react";
@@ -23,7 +23,7 @@ export default function IndexPage({ props }: { props: PageProps }) {
                 <Button
                   variant="soft"
                   onClick={() =>
-                    goTo("https://github.com/copperdevs/star-comparer")
+                    goToNewPage("https://github.com/copperdevs/star-comparer")
                   }
                   className="full width"
                 >

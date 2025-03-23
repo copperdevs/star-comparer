@@ -1,20 +1,22 @@
 import {
   Avatar,
-  Button,
   Card,
   Flex,
   Heading,
   IconButton,
+  Link,
   Skeleton,
   TextField,
+  Text,
+  Grid,
 } from "@radix-ui/themes";
-import { Plus, Search, Star, Trash2 } from "lucide-react";
 import {
   getAllUserStars,
   simplifyText,
   userExists,
   type UserData,
 } from "@/lib";
+import { Search, Star, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -69,15 +71,18 @@ export default function UserList({ users, setUsers }: UserListProps) {
         value={usernameValue}
         onChange={handleUsernameChange}
         onKeyDown={handleUsernameKeyDown}
+        className="spacer vertical"
       >
         <TextField.Slot>
           <Search size="18" />
         </TextField.Slot>
       </TextField.Root>
 
-      {users.map((user) => (
-        <User key={user} username={user} onRemove={removeUser} />
-      ))}
+      <Grid gap="2">
+        {users.map((user) => (
+          <User key={user} username={user} onRemove={removeUser} />
+        ))}
+      </Grid>
     </div>
   );
 }
@@ -115,7 +120,7 @@ function User({ username, onRemove }: UserProps) {
   return (
     <div>
       <Flex width="100%" gap="2" align="center" justify="between">
-        <Card className="spacer vertical">
+        <Card>
           <Flex gap="2" align="center" className="center">
             <Star />
             <Skeleton loading={isLoading}>
@@ -123,21 +128,19 @@ function User({ username, onRemove }: UserProps) {
             </Skeleton>
           </Flex>
         </Card>
-        <Card style={{ flex: 1 }} className="spacer vertical">
+        <Card style={{ flex: 1 }}>
           <Flex width="100%" gap="2" align="center" justify="between">
             <Flex gap="2" align="center">
-              <Skeleton loading={isLoading}>
-                <Avatar
-                  size="2"
-                  fallback={
-                    isLoading ? ((user.username ?? "?")[0] ?? "?") : "?"
-                  }
-                  src={`https://avatars.githubusercontent.com/${username}`}
-                />
-              </Skeleton>
-              <Skeleton loading={isLoading}>
-                <Heading className="selectable">{user.username}</Heading>
-              </Skeleton>
+              <Avatar
+                size="2"
+                fallback={isLoading ? ((user.username ?? "?")[0] ?? "?") : "?"}
+                src={`https://avatars.githubusercontent.com/${username}`}
+              />
+              <Link href={`https://github.com/${username}`} target="_blank">
+                <Text size="4" weight="bold" className="selectable">
+                  {username}
+                </Text>
+              </Link>
             </Flex>
             <IconButton variant="soft" onClick={() => onRemove(user.username)}>
               <Trash2 size="18" />
