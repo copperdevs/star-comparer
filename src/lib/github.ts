@@ -11,7 +11,7 @@ export async function getAllUserStars(username: string): Promise<Data<number>> {
     if (!response.ok) {
       toast.error(`Error getting stars for ${username}`);
       console.error(`GitHub API error: ${response.status}`);
-      return createDataWithError(-1, `GitHub API error: ${response.status}`);
+      return createDataWithError(-2, `GitHub API error: ${response.status}`);
     }
 
     const data = await response.json();
@@ -19,7 +19,7 @@ export async function getAllUserStars(username: string): Promise<Data<number>> {
   } catch (error) {
     toast.error(`Error while getting stars for ${username}`);
     console.error("Error while fetching GitHub stars:", error);
-    return createDataWithError(-1, `Error while getting stars for ${username}`);
+    return createDataWithError(-2, `Error while getting stars for ${username}`);
   }
 }
 
