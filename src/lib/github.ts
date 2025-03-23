@@ -1,10 +1,9 @@
-import { toast } from "sonner";
-
 export type UserData = {
   username: string;
   stars: number;
 };
 
+// TODO: merge getAllUserStars and userExists into one function
 export async function getAllUserStars(username: string): Promise<number> {
   try {
     const response = await fetch(
