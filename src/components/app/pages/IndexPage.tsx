@@ -33,6 +33,7 @@ export default function IndexPage({ props }: { props: PageProps }) {
                   variant="soft"
                   className="full width"
                   onClick={() => setUsers([])}
+                  disabled={!users.length}
                 >
                   <X size="18" /> Clear Users
                 </Button>
