@@ -1,0 +1,9 @@
+{
+  "files.exclude": {
+    ".astro/": true,
+    "node_modules/": true,
+    "bun.lockb": true,
+    ".wrangler/": true
+  },
+  "workbench.editor.labelFormat": "short"
+}

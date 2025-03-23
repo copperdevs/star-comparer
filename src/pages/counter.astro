@@ -1,0 +1,16 @@
+---
+import CounterPage from "@app/pages/CounterPage";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { createProps, type PageProps } from "@/lib";
+
+const props: PageProps = createProps({
+  title: "counter",
+  description:
+    "counter page for the base astro example by copperdevs which is a base example for astro :3",
+  image: "banner.png",
+});
+---
+
+<BaseLayout props={props}>
+  <CounterPage props={props} client:load />
+</BaseLayout>

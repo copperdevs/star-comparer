@@ -1,0 +1,133 @@
+---
+// imports
+import { ClientRouter } from "astro:transitions";
+
+// css
+import "@/styles/style.css";
+import "@radix-ui/themes/styles.css";
+
+// props
+import type { PageProps } from "@/lib";
+
+interface Props {
+  props: PageProps;
+}
+
+const { props } = Astro.props;
+
+// data
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const title = `${props.pageInfo.title} // ${props.siteInfo.title}`;
+const image = new URL(props.pageInfo.image, Astro.url);
+const keywords = props.siteInfo.keywords.join(",");
+---
+
+<!-- trans ition -->
+<ClientRouter />
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" as="font" />
+<link rel="preconnect" href="https://fonts.gstatic.com" as="font" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100..800&family=Rubik:wght@300..900&display=swap"
+  rel="stylesheet"
+/>
+
+<!-- Global Metadata -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="sitemap" href="/sitemap-index.xml" />
+<meta name="generator" content={Astro.generator} />
+<meta name="keywords" content={keywords} />
+<meta name="robots" content={props.siteInfo.robots} />
+<meta name="license" content={props.siteInfo.license} />
+
+<!-- Canonical URL -->
+<link rel="canonical" href={canonicalURL} />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content={Astro.url} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={props.pageInfo.description} />
+<meta property="og:site_name" content={props.siteInfo.title} />
+<meta property="og:image" content={image} />
+
+<!-- Twitter -->
+
+<meta property="twitter:url" content={Astro.url} />
+<meta property="twitter:title" content={title} />
+<meta property="twitter:description" content={props.pageInfo.description} />
+<meta property="twitter:image" content={image} />
+
+{
+  props.siteInfo.twitter && props.siteInfo.twitter.imageAlt && (
+    <meta
+      property="twitter:image:alt"
+      content={props.siteInfo.twitter?.imageAlt}
+    />
+  )
+}
+
+{
+  props.siteInfo.twitter && (
+    <meta
+      property="twitter:card"
+      content={props.siteInfo.twitter.card ?? "summary_large_image"}
+    />
+  )
+}
+
+{
+  props.siteInfo.twitter && props.siteInfo.author.twitterUsername && (
+    <meta
+      property="twitter:creator"
+      content={props.siteInfo.author.twitterUsername}
+    />
+  )
+}
+
+{
+  props.siteInfo.twitter && props.siteInfo.twitter.siteUsername && (
+    <meta
+      property="twitter:site"
+      content={props.siteInfo.twitter.siteUsername}
+    />
+  )
+}
+
+<!-- article -->
+{
+  props.pageInfo.article && (
+    <>
+      <meta name="article:author" content={props.pageInfo.article.author} />
+      <meta
+        name="article:published_time"
+        content={props.pageInfo.article.publishedTime}
+      />
+      <meta
+        name="article:modified_time"
+        content={
+          props.pageInfo.article.modifiedTime ??
+          props.pageInfo.article.publishedTime
+        }
+      />
+      <meta name="article:section" content={props.pageInfo.article.section} />
+      <meta name="article:tag" content={props.pageInfo.article.tag} />
+
+      {props.pageInfo.article.expirationTime && (
+        <meta
+          name="article:expiration_time"
+          content={props.pageInfo.article.expirationTime}
+        />
+      )}
+    </>
+  )
+}
+
+<!-- Primary Meta Tags -->
+<meta name="title" content={title} />
+<meta name="author" content={props.siteInfo.author.name} />
+<meta name="description" content={props.pageInfo.description} />
+<title>{title}</title>

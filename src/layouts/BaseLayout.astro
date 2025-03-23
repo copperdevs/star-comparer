@@ -1,0 +1,21 @@
+---
+import BaseHead from "@/components/utility/BaseHead.astro";
+import type { PageProps } from "@/lib";
+
+interface Props {
+  props: PageProps;
+}
+
+const { props } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <BaseHead props={props} />
+  </head>
+  <body>
+    <main>
+      <slot />
+    </main>
+  </body>
+</html>

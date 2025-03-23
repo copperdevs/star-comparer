@@ -1,0 +1,16 @@
+---
+import IndexPage from "@app/pages/IndexPage";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { createProps, type PageProps } from "@/lib";
+
+const props: PageProps = createProps({
+  title: "home",
+  description:
+    "home page for the base astro example by copperdevs which is a simple template project :3",
+  image: "banner.png",
+});
+---
+
+<BaseLayout props={props}>
+  <IndexPage props={props} client:load />
+</BaseLayout>

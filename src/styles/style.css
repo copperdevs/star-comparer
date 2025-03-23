@@ -1,0 +1,136 @@
+:root {
+  --red-border: red 1px solid;
+  --blue-border: blue 1px solid;
+  --green-border: green 1px solid;
+}
+
+html {
+  font-family: "Rubik", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+  font-optical-sizing: auto;
+  font-variation-settings: "slnt" 0;
+}
+
+body {
+  margin: auto;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+* {
+  user-select: none;
+}
+
+.selectable {
+  user-select: text;
+}
+
+.scrollable {
+  overflow-y: scroll;
+  /* Internet Explorer 10+ */
+  -ms-overflow-style: none;
+  /* Firefox */
+  scrollbar-width: none;
+}
+
+.scrollable::-webkit-scrollbar {
+  /* Safari and Chrome */
+  display: none;
+}
+
+.center {
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.pagecenter {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+}
+
+.content {
+  padding-top: 96px;
+  height: 100%;
+  width: 100%;
+}
+
+@media (min-width: 831px) {
+  .pagecenter .contentcenter {
+    display: flex;
+    align-items: start;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    min-width: 65%;
+    max-width: 75%;
+  }
+}
+
+@media (min-width: 561px) and (max-width: 830px) {
+  .pagecenter .contentcenter {
+    display: flex;
+    align-items: start;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    min-width: 85%;
+    max-width: 95%;
+  }
+}
+
+@media (max-width: 560px) {
+  .pagecenter .contentcenter {
+    display: flex;
+    align-items: start;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    min-width: 95%;
+    max-width: 100%;
+  }
+}
+
+ul.nolist {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+ul.nolist li {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+ul.nolist .card .badge {
+  position: fixed;
+  right: 16px;
+}
+
+.spacer.horizontal {
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.spacer.vertical {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.spacer.bottom {
+  margin-bottom: 8px;
+}
+
+.spacer.horizontal.thin {
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
+.spacer.vertical.thin {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
