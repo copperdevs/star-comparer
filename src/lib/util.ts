@@ -1,9 +1,14 @@
 import { appInfo, siteInfo } from "@/appInfo";
 import { type Data, type PageInfo, type PageProps } from "@/lib";
 
+export function removeDuplicates<T>(arr: T[]): T[] {
+  return [...new Set(arr)];
+}
+
 export function createData<T>(data: T): Data<T> {
   return { data: data, hasError: false, error: "" };
 }
+
 export function createDataWithError<T>(data: T, error: string): Data<T> {
   return { data: data, hasError: true, error: error };
 }

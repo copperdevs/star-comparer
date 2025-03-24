@@ -2,6 +2,7 @@
 import IndexPage from "@app/pages/IndexPage";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { createProps, type PageProps } from "@/lib";
+import ReactScan from "@/components/utility/ReactScan.astro";
 
 const props: PageProps = createProps({
   title: "home",
@@ -12,5 +13,6 @@ const props: PageProps = createProps({
 ---
 
 <BaseLayout props={props}>
+  <ReactScan enabled={false} />
   <IndexPage props={props} client:load />
 </BaseLayout>

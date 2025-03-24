@@ -1,11 +1,11 @@
 import { toast } from "sonner";
 import type { Data } from "./types";
 import { createData, createDataWithError } from "./util";
-import { getItem, hasItem, setItem } from "./storage";
+import { sessionGetItem, sessionHasItem, sessionSetItem } from "./storage";
 
 export async function getAllUserStars(username: string): Promise<Data<number>> {
-  if (hasItem(`${username}-stars`)) {
-    const itemStars = getItem<number>(`${username}-stars`);
+  if (sessionHasItem(`${username}-stars`)) {
+    const itemStars = sessionGetItem<number>(`${username}-stars`);
 
     if (itemStars) {
       // toast.info("Getting stars from cache");
@@ -26,7 +26,7 @@ export async function getAllUserStars(username: string): Promise<Data<number>> {
 
     const data = await response.json();
 
-    setItem(`${username}-stars`, data.stars);
+    sessionSetItem(`${username}-stars`, data.stars);
 
     return createData(data.stars);
   } catch (error) {
@@ -37,8 +37,8 @@ export async function getAllUserStars(username: string): Promise<Data<number>> {
 }
 
 export async function userExists(username: string): Promise<Data<boolean>> {
-  if (hasItem(`${username}-exists`)) {
-    const itemExists = getItem<boolean>(`${username}-exists`);
+  if (sessionHasItem(`${username}-exists`)) {
+    const itemExists = sessionGetItem<boolean>(`${username}-exists`);
 
     if (itemExists) {
       // toast.info("Getting user exists from cache");
@@ -53,7 +53,7 @@ export async function userExists(username: string): Promise<Data<boolean>> {
       return createDataWithError(false, response.statusText);
     }
 
-    setItem(`${username}-exists`, response.status === 200);
+    sessionSetItem(`${username}-exists`, response.status === 200);
 
     return createData(response.status === 200);
   } catch (error) {

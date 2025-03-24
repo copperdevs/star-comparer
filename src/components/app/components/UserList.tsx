@@ -6,15 +6,14 @@ import {
   IconButton,
   Link,
   Skeleton,
-  TextField,
   Text,
   Grid,
-  HoverCard,
 } from "@radix-ui/themes";
-import { getAllUserStars, userExists, simplifyText, type Data } from "@/lib";
-import { Search, Star, Trash2 } from "lucide-react";
+import { getAllUserStars, userExists } from "@/lib";
+import { Star, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import InputBox from "./InputBox";
 
 interface UserListProps {
   users: string[];
@@ -22,51 +21,13 @@ interface UserListProps {
 }
 
 export default function UserList({ users, setUsers }: UserListProps) {
-  const [usernameValue, setUsernameValue] = useState("");
-  function handleUsernameChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setUsernameValue(simplifyText(event.target.value));
-  }
-
-  function handleUsernameKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
-    if (usernameValue === "") return;
-
-    if (event.key === "Enter") {
-      addUser();
-      setUsernameValue("");
-    }
-  }
-
-  async function addUser() {
-    // duplicate user check
-    if (
-      users.some(
-        (username) => username.toLowerCase() === usernameValue.toLowerCase()
-      )
-    ) {
-      toast.warning("User already added");
-      return;
-    }
-
-    setUsers([...users, usernameValue]);
-  }
-
   function removeUser(username: string) {
     setUsers(users.filter((user) => user !== username));
   }
 
   return (
     <div>
-      <TextField.Root
-        placeholder="Add a user..."
-        value={usernameValue}
-        onChange={handleUsernameChange}
-        onKeyDown={handleUsernameKeyDown}
-        className="spacer vertical"
-      >
-        <TextField.Slot>
-          <Search size="18" />
-        </TextField.Slot>
-      </TextField.Root>
+      <InputBox users={users} setUsers={setUsers} />
 
       <Grid gap="2">
         {users.map((user) => (
@@ -97,6 +58,7 @@ function User({ username, onRemove }: UserProps) {
       if (!existsData.data) {
         toast.error(`User ${username} does not exist`);
         onRemove(username);
+        return;
       }
 
       const starsData = await getAllUserStars(username);
@@ -104,6 +66,7 @@ function User({ username, onRemove }: UserProps) {
 
       if (starsData.hasError) {
         onRemove(username);
+        return;
       }
     } catch (error) {
       console.error(error);
