@@ -39,13 +39,26 @@ export async function getAllUserStars(username: string): Promise<Data<number>> {
 
     const data = await response.json();
 
-    sessionSetItem<UserStorage>(username, {
-      exists: true,
-      username: username,
-      stars: data.stars,
-      displayUsername: undefined,
-      userType: "User",
-    });
+    if (sessionHasItem(username)) {
+      const foundItem = sessionGetItem<UserStorage>(username);
+      if (foundItem) {
+        sessionSetItem<UserStorage>(username, {
+          exists: foundItem?.exists,
+          username: username,
+          stars: data.stars,
+          displayUsername: foundItem.displayUsername,
+          userType: foundItem.userType,
+        });
+      }
+    } else {
+      sessionSetItem<UserStorage>(username, {
+        exists: true,
+        username: username,
+        stars: data.stars,
+        displayUsername: undefined,
+        userType: "User",
+      });
+    }
 
     return createData(data.stars);
   } catch (error) {
@@ -73,14 +86,17 @@ export async function userExists(username: string): Promise<Data<boolean>> {
       return createDataWithError(false, response.statusText);
     }
 
-    const displayName = (await response.json()).name;
+    const data = (await response.json()) as {
+      name: string;
+      type: UserType;
+    };
 
     sessionSetItem<UserStorage>(username, {
       exists: response.status === 200,
       username: username,
       stars: -1,
-      displayUsername: displayName,
-      userType: "User",
+      displayUsername: data.name,
+      userType: data.type,
     });
 
     return createData(response.status === 200);
