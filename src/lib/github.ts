@@ -3,13 +3,26 @@ import type { Data } from "./types";
 import { createData, createDataWithError } from "./util";
 import { sessionGetItem, sessionHasItem, sessionSetItem } from "./storage";
 
-export async function getAllUserStars(username: string): Promise<Data<number>> {
-  if (sessionHasItem(`${username}-stars`)) {
-    const itemStars = sessionGetItem<number>(`${username}-stars`);
+export type UserStorage = {
+  exists: boolean;
+  username: string;
+  stars: number | undefined;
+  displayUsername: string | undefined;
+  userType: UserType;
+};
 
-    if (itemStars) {
-      // toast.info("Getting stars from cache");
-      return createData(itemStars);
+export type UserType = "User" | "Organization";
+
+export async function getAllUserStars(username: string): Promise<Data<number>> {
+  if (sessionHasItem(username)) {
+    let item = sessionGetItem<UserStorage>(username);
+
+    if (item) {
+      item = await updateData(username, item);
+
+      if (item.stars !== -1) {
+        return createData(item.stars ?? -1);
+      }
     }
   }
 
@@ -26,7 +39,13 @@ export async function getAllUserStars(username: string): Promise<Data<number>> {
 
     const data = await response.json();
 
-    sessionSetItem(`${username}-stars`, data.stars);
+    sessionSetItem<UserStorage>(username, {
+      exists: true,
+      username: username,
+      stars: data.stars,
+      displayUsername: undefined,
+      userType: "User",
+    });
 
     return createData(data.stars);
   } catch (error) {
@@ -37,12 +56,13 @@ export async function getAllUserStars(username: string): Promise<Data<number>> {
 }
 
 export async function userExists(username: string): Promise<Data<boolean>> {
-  if (sessionHasItem(`${username}-exists`)) {
-    const itemExists = sessionGetItem<boolean>(`${username}-exists`);
+  if (sessionHasItem(username)) {
+    let item = sessionGetItem<UserStorage>(username);
 
-    if (itemExists) {
-      // toast.info("Getting user exists from cache");
-      return createData(itemExists);
+    if (item) {
+      item = await updateData(username, item);
+
+      return createData(item.exists ?? false);
     }
   }
 
@@ -53,7 +73,15 @@ export async function userExists(username: string): Promise<Data<boolean>> {
       return createDataWithError(false, response.statusText);
     }
 
-    sessionSetItem(`${username}-exists`, response.status === 200);
+    const displayName = (await response.json()).name;
+
+    sessionSetItem<UserStorage>(username, {
+      exists: response.status === 200,
+      username: username,
+      stars: -1,
+      displayUsername: displayName,
+      userType: "User",
+    });
 
     return createData(response.status === 200);
   } catch (error) {
@@ -61,4 +89,37 @@ export async function userExists(username: string): Promise<Data<boolean>> {
     console.error(message);
     return createDataWithError(false, message);
   }
+}
+
+async function updateData(
+  username: string,
+  targetItem: UserStorage
+): Promise<UserStorage> {
+  const item = targetItem;
+  let updated: boolean = false;
+
+  const response = await fetch(`https://api.github.com/users/${username}`);
+  const data = (await response.json()) as {
+    name: string;
+    type: UserType;
+  };
+
+  // display name
+  if (item.displayUsername === undefined || item.displayUsername === null) {
+    const displayName = data.name;
+
+    item.displayUsername = displayName;
+
+    updated = true;
+  }
+
+  // user type
+  {
+    item.userType = data.type;
+    updated = true;
+  }
+
+  if (updated) sessionSetItem(username, item);
+
+  return item;
 }
