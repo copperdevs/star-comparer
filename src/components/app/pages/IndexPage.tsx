@@ -3,10 +3,19 @@ import { BaseAppLayout } from "@/components/app/layouts/BaseAppLayout";
 import { Box, Button, Grid, Heading, Separator } from "@radix-ui/themes";
 import { Github, X } from "lucide-react";
 import UserList from "@app/components/UserList";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function IndexPage({ props }: { props: PageProps }) {
   const [users, setUsers] = useState<string[]>([]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const user = params.get("user");
+
+    if (!user) return;
+
+    setUsers([...users, user]);
+  }, []);
 
   return (
     <BaseAppLayout props={props}>
