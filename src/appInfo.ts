@@ -3,7 +3,7 @@ import { type AppInfo, type SiteInfo } from "@/lib";
 export const appInfo: AppInfo = {
   accentColor: "ruby",
   grayColor: "slate",
-  appearanceColor: "dark",
+  appearanceColor: "system",
 };
 
 export const siteInfo: SiteInfo = {

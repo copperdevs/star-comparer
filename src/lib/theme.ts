@@ -1,4 +1,4 @@
-export type AppearanceColors = "dark" | "light";
+export type AppearanceColors = "dark" | "light" | "system";
 
 export type AccentColors =
   | "gray"
