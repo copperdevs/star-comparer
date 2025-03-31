@@ -6,7 +6,7 @@ import react from "@astrojs/react";
 import cloudflare from "@astrojs/cloudflare";
 import sitemap from "@astrojs/sitemap";
 
-const siteUrl = "https://base-astro.copperdevs.com";
+const siteUrl = "https://stars.copperdevs.com";
 
 // https://astro.build/config
 export default defineConfig({
