@@ -8,7 +8,7 @@ import {
   Skeleton,
   Text,
   Grid,
-  HoverCard,
+  Tooltip,
 } from "@radix-ui/themes";
 import {
   getAllUserStars,
@@ -103,47 +103,38 @@ function User({ username, onRemove }: UserProps) {
               </Flex>
             </Skeleton>
           </Card>
-          <HoverCard.Root>
-            <Card style={{ flex: 1 }}>
-              <Flex width="100%" gap="2" align="center" justify="between">
-                <Flex gap="2" align="center">
-                  <Avatar
-                    size="2"
-                    fallback={
-                      (userStorage.displayUsername ?? username ?? "???")[0]
-                    }
-                    src={`https://avatars.githubusercontent.com/${username}`}
-                    radius={
-                      userStorage.userType === "User"
-                        ? "full"
-                        : userStorage.userType === "Organization"
-                          ? "large"
-                          : "none"
-                    }
-                  />
-                  <HoverCard.Trigger>
-                    <Link
-                      href={`https://github.com/${username}`}
-                      target="_blank"
-                    >
-                      <Text size="4" weight="bold" className="selectable">
-                        {userStorage.displayUsername ?? username}
-                      </Text>
-                    </Link>
-                  </HoverCard.Trigger>
-                </Flex>
+          <Card style={{ flex: 1 }}>
+            <Flex width="100%" gap="2" align="center" justify="between">
+              <Flex gap="2" align="center">
+                <Avatar
+                  size="2"
+                  fallback={
+                    (userStorage.displayUsername ?? username ?? "???")[0]
+                  }
+                  src={`https://avatars.githubusercontent.com/${username}`}
+                  radius={
+                    userStorage.userType === "User"
+                      ? "full"
+                      : userStorage.userType === "Organization"
+                        ? "large"
+                        : "none"
+                  }
+                />
+                <Tooltip content={username}>
+                  <Link href={`https://github.com/${username}`} target="_blank">
+                    <Text size="4" weight="bold" className="selectable">
+                      {userStorage.displayUsername ?? username}
+                    </Text>
+                  </Link>
+                </Tooltip>
+              </Flex>
+              <Tooltip content="Remove User">
                 <IconButton variant="soft" onClick={() => onRemove(username)}>
                   <Trash2 size="18" />
                 </IconButton>
-              </Flex>
-            </Card>
-            <HoverCard.Content>
-              <Text size="3" className="selectable">
-                {`Display name: ${userStorage.displayUsername}`} <br />
-                {`Username: ${username}`}
-              </Text>
-            </HoverCard.Content>
-          </HoverCard.Root>
+              </Tooltip>
+            </Flex>
+          </Card>
         </Flex>
       )}
     </div>

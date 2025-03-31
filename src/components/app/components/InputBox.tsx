@@ -72,11 +72,6 @@ export default function UserList({ users, setUsers }: UserListProps) {
           <Search size="18" />
         </TextField.Slot>
       </TextField.Root>
-      {/* <datalist id="username-presets-list">
-        {usedUsers.map((username) => (
-          <option key={username} value={username} />
-        ))}
-      </datalist> */}
     </>
   );
 }
