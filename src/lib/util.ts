@@ -11,9 +11,9 @@ export function getUrl(users: string[]): string {
   if (users.length === 0) {
     return `${import.meta.env.SITE}`;
   } else if (users.length === 1) {
-    return `${import.meta.env.SITE}/user=${users[0]}`;
+    return `${import.meta.env.SITE}/?user=${users[0]}`;
   } else {
-    return `${import.meta.env.SITE}/users=${users.join(",")}`;
+    return `${import.meta.env.SITE}/?users=${users.join(",")}`;
   }
 }
 

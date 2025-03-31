@@ -68,7 +68,7 @@ export default function UserList({ users, setUsers }: UserListProps) {
         id="username-presets"
         list="username-presets-list"
       >
-        <TextField.Slot>
+        <TextField.Slot >
           <Search size="18" />
         </TextField.Slot>
       </TextField.Root>
