@@ -1,7 +1,7 @@
-import { goToNewPage, type PageProps } from "@/lib";
+import { copyToClipboard, getUrl, goToNewPage, type PageProps } from "@/lib";
 import { BaseAppLayout } from "@/components/app/layouts/BaseAppLayout";
 import { Box, Button, Grid, Heading, Separator } from "@radix-ui/themes";
-import { Github, X } from "lucide-react";
+import { Github, X, Link } from "lucide-react";
 import UserList from "@app/components/UserList";
 import { useEffect, useState } from "react";
 
@@ -10,11 +10,15 @@ export default function IndexPage({ props }: { props: PageProps }) {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const user = params.get("user");
+    const singleUser = params.get("user");
+    const multipleUsers = params.get("users");
 
-    if (!user) return;
-
-    setUsers([...users, user]);
+    if (multipleUsers) {
+      const userArray = multipleUsers.split(",").filter((u) => u.trim());
+      setUsers(userArray);
+    } else if (singleUser) {
+      setUsers([singleUser]);
+    }
   }, []);
 
   return (
@@ -28,7 +32,7 @@ export default function IndexPage({ props }: { props: PageProps }) {
             <Box width="95%" className="center ">
               <Separator size="4" className="spacer vertical" />
 
-              <Grid columns="2" gap="2" className="center">
+              <Grid columns="3" gap="2" className="center">
                 <Button
                   variant="soft"
                   onClick={() =>
@@ -45,6 +49,14 @@ export default function IndexPage({ props }: { props: PageProps }) {
                   disabled={!users.length}
                 >
                   <X size="18" /> Clear Users
+                </Button>
+                <Button
+                  variant="soft"
+                  className="full width"
+                  onClick={() => copyToClipboard(getUrl(users))}
+                  disabled={!users.length}
+                >
+                  <Link size="18" /> Copy Link
                 </Button>
               </Grid>
 
