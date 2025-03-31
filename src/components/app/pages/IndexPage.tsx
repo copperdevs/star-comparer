@@ -1,4 +1,10 @@
-import { copyToClipboard, getUrl, goToNewPage, type PageProps } from "@/lib";
+import {
+  copyToClipboard,
+  getUrl,
+  goToNewPage,
+  setURL,
+  type PageProps,
+} from "@/lib";
 import { BaseAppLayout } from "@/components/app/layouts/BaseAppLayout";
 import { Box, Button, Grid, Heading, Separator } from "@radix-ui/themes";
 import { Github, X, Link } from "lucide-react";
@@ -45,7 +51,10 @@ export default function IndexPage({ props }: { props: PageProps }) {
                 <Button
                   variant="soft"
                   className="full width"
-                  onClick={() => setUsers([])}
+                  onClick={() => {
+                    setURL(getUrl([]));
+                    return setUsers([]);
+                  }}
                   disabled={!users.length}
                 >
                   <X size="18" /> Clear Users
@@ -62,7 +71,13 @@ export default function IndexPage({ props }: { props: PageProps }) {
 
               <Separator size="4" className="spacer vertical" />
 
-              <UserList users={users} setUsers={setUsers} />
+              <UserList
+                users={users}
+                setUsers={(users) => {
+                  setURL(getUrl(users));
+                  return setUsers(users);
+                }}
+              />
             </Box>
           </div>
         </div>

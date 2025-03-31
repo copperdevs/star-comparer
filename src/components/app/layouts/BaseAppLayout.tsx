@@ -44,7 +44,7 @@ export function BaseAppLayout({
       radius="large"
       appearance={appearance}
     >
-      <Toaster theme="dark" richColors expand visibleToasts={16} />
+      <Toaster theme={props.appInfo.appearanceColor} richColors expand visibleToasts={16} />
       {children}
     </RadixTheme>
   );

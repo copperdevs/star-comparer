@@ -17,6 +17,10 @@ export function getUrl(users: string[]): string {
   }
 }
 
+export function setURL(url: string) {
+  history.pushState(null, "", url);
+}
+
 export function removeDuplicates<T>(arr: T[]): T[] {
   return [...new Set(arr)];
 }
