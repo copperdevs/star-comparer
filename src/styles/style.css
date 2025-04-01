@@ -60,15 +60,27 @@ body {
   width: 100%;
 }
 
-@media (min-width: 831px) {
+@media (min-width: 1201px) {
   .pagecenter .contentcenter {
     display: flex;
     align-items: start;
     flex-direction: column;
     justify-content: center;
     height: 100%;
-    min-width: 75%;
-    max-width: 85%;
+    min-width: 55%;
+    max-width: 65%;
+  }
+}
+
+@media (min-width: 831px) and (max-width: 1200px) {
+  .pagecenter .contentcenter {
+    display: flex;
+    align-items: start;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    min-width: 65%;
+    max-width: 75%;
   }
 }
 
